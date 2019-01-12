@@ -11,6 +11,10 @@ int main(int argc, char *argv[])
     Widget w1;
     Widget w2;
     GLWidget w3;
+
+    // Create surface format for OpenGL Widget setting
+    // sample will enable multisampling which helps in antialiasing,
+    // without samples, rendering will look bad
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);

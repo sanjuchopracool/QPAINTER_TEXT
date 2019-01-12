@@ -5,15 +5,25 @@
 inline void paintFunction(QPainter *painter, const QString& text)
 {
     painter->setRenderHints(QPainter::Antialiasing);
+
+    // Customize fonts
     QFont font = painter->font();
     font.setPointSize(20);
     painter->setFont(font);
-    painter->drawText(QPointF(20, 30), text);
 
+    // draw text passed as argument
+    painter->drawText(QPointF(20, 50), text);
+
+    // get canvas size (widget size)
     auto paintRect = QRect(0, 0, painter->device()->width(), painter->device()->height());
-    painter->save();
 
+    // save painter state, because we are moving to center
+    // and will paint our A there, later we can restore state
+    // which will reset painter
+    painter->save();
     painter->translate(paintRect.width()/2, paintRect.height()/2);
+
+    // Customize fonts and pen width
     font.setPointSize(400);
     font.setBold(true);
     painter->setFont(font);
@@ -21,6 +31,7 @@ inline void paintFunction(QPainter *painter, const QString& text)
     pen.setWidth(5);
     painter->setPen(pen);
 
+    // Create a painter path to draw A with yellow brush
     QPainterPath textPath;
     textPath.addText(0,0, font, "A");
     painter->setBrush(Qt::yellow);
@@ -29,9 +40,10 @@ inline void paintFunction(QPainter *painter, const QString& text)
     painter->drawPath(textPath);
     painter->restore();
 
-    painter->setBrush(Qt::darkGray);
+    // now fill background behind current render using destination over
+    // composition mode
     painter->setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    painter->drawRect(paintRect);
+    painter->fillRect(paintRect, Qt::darkGray);
 }
 
 #endif // PAINTROUTINE_H
